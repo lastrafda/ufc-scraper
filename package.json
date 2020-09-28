@@ -1,0 +1,9 @@
+{
+  "name": "ufc-scrap",
+  "version": "1.0.0",
+  "description": "A Simple Scraper to get figthers data",
+  "main": "index.js",
+  "repository": "https://github.com/lastrafda/ufc-scraper",
+  "author": "josé lastra",
+  "license": "MIT"
+}

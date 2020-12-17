@@ -3,7 +3,16 @@
   "version": "1.0.0",
   "description": "A Simple Scraper to get figthers data",
   "main": "index.js",
+  "scripts": {
+    "lint": "eslint \"**/*.js\" --ignore-pattern node_modules/"
+  },
   "repository": "https://github.com/lastrafda/ufc-scraper",
   "author": "josé lastra",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^5.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.15.0"
+  }
 }

@@ -1,10 +1,10 @@
 const puppeteer = require("puppeteer");
-
+// might consider to: 1) update to playwright 2) use ts.
 (async () => {
   let browser;
   const baseUrl = "https://www.ufc.com/";
   try {
-    browser = await puppeteer.launch({ headless: false, slowMo: 250 });
+    browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(baseUrl, {
       waitUntil: "networkidle2",
@@ -31,12 +31,15 @@ const puppeteer = require("puppeteer");
 
     const columnsHandle = await page.$$("div.view-grouping");
 
+    let output = { data: [] };
+    let columnIndex = 0;
+
     for (const column of columnsHandle) {
       const divisionName = await column.$eval(
         ".rankings--athlete--champion>.info>h4",
         (x) => x.textContent
       );
-      console.log(divisionName);
+      output.data.push({ division: divisionName });
       const fightersUrl = await column.$$eval('a[href^="/athlete/"]', (nodes) =>
         nodes.map((n) => n.getAttribute("href"))
       );
@@ -75,14 +78,24 @@ const puppeteer = require("puppeteer");
           ".c-hero__headline-suffix",
           (div) => div.textContent
         );
-        console.log("nickname", nickname);
-        console.log("fullname", fullname);
-        console.log("description", description);
+        let fighter = {
+          nickname,
+          fullname,
+          description,
+        };
+
+        if (!output.data[columnIndex].fighters) {
+          output.data[columnIndex].fighters = [];
+        }
+        output.data[columnIndex].fighters.push(fighter);
+
         await fighterPage.close();
       }
+      columnIndex++;
     }
 
     await browser.close();
+    console.log(output);
   } catch (error) {
     console.error(error);
     if (browser && browser.isConnected()) {

@@ -78,11 +78,34 @@ const puppeteer = require("puppeteer");
           ".c-hero__headline-suffix",
           (div) => div.textContent
         );
+
+        /**
+         * Get the stats of every fighter.
+         */
+        fighterPage.waitForSelector(".c-overlap__stats-value", {
+          timeout: 4000,
+        });
+        const [
+          sigStrikesLanded,
+          sigStrikesAttempted,
+          takedownsLanded,
+          takedownsAttempted,
+        ] = await fighterPage.$$eval(".c-overlap__stats-value", (dts) =>
+          dts.map((dt) => dt.textContent)
+        );
+
         let fighter = {
           nickname,
           fullname,
           description,
+          stats: {
+            sigStrikesAttempted: defaultToZero(sigStrikesAttempted),
+            sigStrikesLanded: defaultToZero(sigStrikesLanded),
+            takedownsAttempted: defaultToZero(takedownsAttempted),
+            takedownsLanded: defaultToZero(takedownsLanded),
+          },
         };
+        console.log(fighter);
 
         if (!output.data[columnIndex].fighters) {
           output.data[columnIndex].fighters = [];
@@ -93,9 +116,7 @@ const puppeteer = require("puppeteer");
       }
       columnIndex++;
     }
-
     await browser.close();
-    console.log(output);
   } catch (error) {
     console.error(error);
     if (browser && browser.isConnected()) {
@@ -120,4 +141,8 @@ async function autoScroll(page) {
       }, 100);
     });
   });
+}
+
+function defaultToZero(x) {
+  return x ? parseInt(x, 10) : 0;
 }

@@ -144,6 +144,48 @@ const puppeteer = require("puppeteer");
               return x.textContent;
             })
         );
+
+        // Get the third row of the stats section (bar charts and body charts)
+        // Sig Strikes by Position and wins by way
+        await fighterPage.waitForSelector(".c-stat-3bar__value", {
+          timeout: 4000,
+        });
+        const [
+          standing,
+          clinch,
+          ground,
+          koTko,
+          dec,
+          sub,
+        ] = await fighterPage.$$eval(".c-stat-3bar__value", (nodes) =>
+          nodes.map((n) => n.textContent)
+        );
+        // Sig strikes by target
+        const headNumber = await fighterPage.$eval(
+          "#e-stat-body_x5F__x5F_head_value",
+          (n) => n.textContent
+        );
+        const bodyNumber = await fighterPage.$eval(
+          "#e-stat-body_x5F__x5F_body_value",
+          (n) => n.textContent
+        );
+        const legNumber = await fighterPage.$eval(
+          "#e-stat-body_x5F__x5F_leg_value",
+          (n) => n.textContent
+        );
+        const headPercentage = await fighterPage.$eval(
+          "#e-stat-body_x5F__x5F_head_percent",
+          (n) => n.textContent
+        );
+        const bodyPercentage = await fighterPage.$eval(
+          "#e-stat-body_x5F__x5F_body_percent",
+          (n) => n.textContent
+        );
+        const legPercentage = await fighterPage.$eval(
+          "#e-stat-body_x5F__x5F_leg_percent",
+          (n) => n.textContent
+        );
+
         let fighter = {
           nickname,
           fullname,
@@ -175,6 +217,30 @@ const puppeteer = require("puppeteer");
             takedownDefence,
             knockdownRatio,
             avgFightTime,
+            sigStrikesByPosition: {
+              standing,
+              clinch,
+              ground,
+            },
+            sigStrikeByTarget: {
+              head: {
+                value: headNumber,
+                percentage: headPercentage,
+              },
+              body: {
+                value: bodyNumber,
+                percentage: bodyPercentage,
+              },
+              leg: {
+                value: legNumber,
+                percentage: legPercentage,
+              },
+            },
+            winByWay: {
+              koTko,
+              dec,
+              sub,
+            },
           },
         };
         console.log(fighter);

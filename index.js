@@ -9,11 +9,7 @@ const puppeteer = require("puppeteer");
     await page.goto(baseUrl, {
       waitUntil: "networkidle2",
     });
-
-    await page.waitForSelector('[title="Accept Cookies Button"]', {
-      timeout: 4000,
-    });
-    await page.click('[title="Accept Cookies Button"]');
+    await clearPage(page);
 
     await autoScroll(page);
 
@@ -27,7 +23,7 @@ const puppeteer = require("puppeteer");
 
     await page.click('a[href="/rankings"]');
 
-    await page.waitForSelector("div.view-grouping");
+    await page.waitForSelector("div.view-grouping", { timeout: 5000 });
 
     const columnsHandle = await page.$$("div.view-grouping");
 
@@ -80,9 +76,34 @@ const puppeteer = require("puppeteer");
         );
 
         /**
+         * Get the promo record of every fighter
+         */
+        await fighterPage.waitForSelector(".c-record__promoted-figure", {
+          timeout: 4000,
+        });
+
+        // I have to use general names because they are not always the same
+        // A fighter might have 0 ,1,2,3,...n promoted  texts, there are usually 2 or 3 AFAIK
+        const [
+          firstPromotedValue,
+          secondPromotedValue,
+          thirdPromotedValue,
+        ] = await fighterPage.$$eval(".c-record__promoted-figure", (nodes) =>
+          nodes.map((n) => n.textContent)
+        );
+
+        const [
+          firstPromotedText,
+          secondPromotedText,
+          thirdPromotedText,
+        ] = await fighterPage.$$eval(".c-record__promoted-text", (nodes) =>
+          nodes.map((n) => n.textContent)
+        );
+
+        /**
          * Get the stats of every fighter.
          */
-        fighterPage.waitForSelector(".c-overlap__stats-value", {
+        await fighterPage.waitForSelector(".c-overlap__stats-value", {
           timeout: 4000,
         });
         const [
@@ -94,15 +115,66 @@ const puppeteer = require("puppeteer");
           dts.map((dt) => dt.textContent)
         );
 
+        // Lets click the 'Show Stats' button
+        await fighterPage.waitForSelector(
+          ".stats-button__wrapper>.e-button--white",
+          {
+            timeout: 4000,
+          }
+        );
+        await fighterPage.click(".stats-button__wrapper>.e-button--white");
+        // let's get the sig strikes, takedown/submission data.
+        await fighterPage.waitForSelector(".c-stat-compare__number", {
+          timeout: 4000,
+        });
+        // weird name (stat_numbers) but ok
+        const [
+          sigStrikesLandedPerMin,
+          sigStrikesAbsorbedPerMin,
+          takedownAvgPerFifteen,
+          submissionAvgPerFifteen,
+          sigStrikeDefence,
+          takedownDefence,
+          knockdownRatio,
+          avgFightTime,
+        ] = await fighterPage.$$eval(
+          ".c-stat-compare__number",
+          (stat_numbers) =>
+            stat_numbers.map((x) => {
+              return x.textContent;
+            })
+        );
         let fighter = {
           nickname,
           fullname,
           description,
+          promoted: [
+            {
+              label: firstPromotedText,
+              value: firstPromotedValue,
+            },
+            {
+              label: secondPromotedText,
+              value: secondPromotedValue,
+            },
+            {
+              label: thirdPromotedText,
+              value: thirdPromotedValue,
+            },
+          ],
           stats: {
-            sigStrikesAttempted: defaultToZero(sigStrikesAttempted),
-            sigStrikesLanded: defaultToZero(sigStrikesLanded),
-            takedownsAttempted: defaultToZero(takedownsAttempted),
-            takedownsLanded: defaultToZero(takedownsLanded),
+            sigStrikesAttempted,
+            sigStrikesLanded,
+            takedownsAttempted,
+            takedownsLanded,
+            sigStrikesLandedPerMin,
+            sigStrikesAbsorbedPerMin,
+            takedownAvgPerFifteen,
+            submissionAvgPerFifteen,
+            sigStrikeDefence,
+            takedownDefence,
+            knockdownRatio,
+            avgFightTime,
           },
         };
         console.log(fighter);
@@ -143,6 +215,14 @@ async function autoScroll(page) {
   });
 }
 
-function defaultToZero(x) {
-  return x ? parseInt(x, 10) : 0;
+async function clearPage(page) {
+  try {
+    await page.waitForSelector('[title="Accept Cookies Button"]', {
+      timeout: 4000,
+    });
+    await page.click('[title="Accept Cookies Button"]');
+  } catch (error) {
+    // Do nothing
+    console.error("There has been an update on the ufc site, go figure it out");
+  }
 }

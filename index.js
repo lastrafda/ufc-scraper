@@ -1,4 +1,5 @@
 const puppeteer = require("puppeteer");
+const fs = require("fs");
 // might consider to: 1) update to playwright 2) use ts.
 (async () => {
   let browser;
@@ -78,9 +79,11 @@ const puppeteer = require("puppeteer");
         /**
          * Get the promo record of every fighter
          */
-        await fighterPage.waitForSelector(".c-record__promoted-figure", {
-          timeout: 4000,
-        });
+        await fighterPage
+          .waitForSelector(".c-record__promoted-figure", {
+            timeout: 4000,
+          })
+          .catch(() => console.log(`${fullname} does not have promo data`));
 
         // I have to use general names because they are not always the same
         // A fighter might have 0 ,1,2,3,...n promoted  texts, there are usually 2 or 3 AFAIK
@@ -103,9 +106,11 @@ const puppeteer = require("puppeteer");
         /**
          * Get the stats of every fighter.
          */
-        await fighterPage.waitForSelector(".c-overlap__stats-value", {
-          timeout: 4000,
-        });
+        await fighterPage
+          .waitForSelector(".c-overlap__stats-value", {
+            timeout: 6000,
+          })
+          .catch(() => console.log(`${fullname} doesn't have stats`));
         const [
           sigStrikesLanded,
           sigStrikesAttempted,
@@ -255,6 +260,18 @@ const puppeteer = require("puppeteer");
       columnIndex++;
     }
     await browser.close();
+    fs.rmSync("./output.json", (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+    });
+    fs.writeFile("output.json", JSON.stringify(output), "utf8", (err) => {
+      if (err) {
+        throw err;
+      }
+      console.log("The file has been saved! :D ");
+    });
   } catch (error) {
     console.error(error);
     if (browser && browser.isConnected()) {

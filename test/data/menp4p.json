@@ -6,22 +6,22 @@
       "fullname": "Khabib Nurmagomedov",
       "description": "Lightweight Champion • 28-0-0 (W-L-D)",
       "promoted": [
-        { "label": "Fight Win Streak", "value": "28" },
-        { "label": "Wins by Knockout", "value": "8" },
-        { "label": "Wins by Submission", "value": "10" }
+        { "label": "Fight Win Streak", "value": 28 },
+        { "label": "Wins by Knockout", "value": 8 },
+        { "label": "Wins by Submission", "value": 10 }
       ],
       "stats": {
-        "sigStrikesAttempted": "1323",
-        "sigStrikesLanded": "657",
-        "takedownsAttempted": "116",
-        "takedownsLanded": "49",
-        "sigStrikesLandedPerMin": "4.29",
-        "sigStrikesAbsorbedPerMin": "1.70",
-        "takedownAvgPerFifteen": "5.09",
-        "submissionAvgPerFifteen": "0.59",
+        "sigStrikesAttempted": 1323,
+        "sigStrikesLanded": 657,
+        "takedownsAttempted": 116,
+        "takedownsLanded": 49,
+        "sigStrikesLandedPerMin": 4.29,
+        "sigStrikesAbsorbedPerMin": 1.7,
+        "takedownAvgPerFifteen": 5.09,
+        "submissionAvgPerFifteen": 0.59,
         "sigStrikeDefence": "67%",
         "takedownDefence": "85%",
-        "knockdownRatio": "0.20",
+        "knockdownRatio": 0.2,
         "avgFightTime": "13:56",
         "sigStrikesByPosition": {
           "standing": "263 (40%)",
@@ -29,9 +29,9 @@
           "ground": "368 (56%)"
         },
         "sigStrikeByTarget": {
-          "head": { "value": "570", "percentage": "87%" },
-          "body": { "value": "55 ", "percentage": "8%" },
-          "leg": { "value": "32", "percentage": "5%" }
+          "head": { "value": 570, "percentage": "87%" },
+          "body": { "value": 55, "percentage": "8%" },
+          "leg": { "value": 32, "percentage": "5%" }
         },
         "winByWay": {
           "koTko": "8 (29%)",

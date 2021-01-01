@@ -5,10 +5,28 @@ const cleaner = (rankings) => {
     holder.push({
       division: cleanString(rank.division),
       fighters: rank.fighters.map((fighter) => {
+        // I can't give it a specific name because itsn't fixed, deal with it...
+        let [firstPromo, secondPromo, thirdPromo] = fighter.promoted;
+        // lets add the "promoted" section
+        // @TODO: refactor this big boi into smaller functions
         return {
           nickname: cleanString(fighter.nickname),
           fullname: cleanString(fighter.fullname),
           description: cleanString(fighter.description),
+          promoted: [
+            {
+              label: cleanString(firstPromo.label),
+              value: parseInt(firstPromo.value, 10),
+            },
+            {
+              label: cleanString(secondPromo.label),
+              value: parseInt(secondPromo.value, 10),
+            },
+            {
+              label: cleanString(thirdPromo.label),
+              value: parseInt(thirdPromo.value, 10),
+            },
+          ],
         };
       }),
     });
@@ -17,12 +35,10 @@ const cleaner = (rankings) => {
 };
 
 const cleanString = (text) => {
+  if (typeof text === "undefined") {
+    return "";
+  }
   return text.replace(/\"/g, "").replace(/\s+/g, " ").trim();
 };
 
-console.log(
-  cleanString(
-    "\n                                Lightweight Champion\n              • \n                            28-0-0 (W-L-D)\n    \n          "
-  )
-);
 module.exports = { cleaner, cleanString };

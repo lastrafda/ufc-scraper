@@ -8,15 +8,14 @@ beforeEach(() => {
   [cleanedMen4p4] = cleaner(data);
   [khabib] = menp4p.fighters;
 });
-/**
- * toMatchObject(menp4p)
- */
-//I'll rename the tests later.
+
 describe("Cleaner Ranks", () => {
+  test("it can clean the division name", () => {
+    expect(cleanedMen4p4.division).toBe(menp4p.division);
+  });
+
   test("it can clean the fighters description", () => {
     let cleanedKhabib = cleanedMen4p4.fighters[0];
-    // @TODO: move this line into its own test
-    expect(cleanedMen4p4.division).toBe(cleanedMen4p4.division);
     expect(cleanedKhabib.nickname).toEqual(khabib.nickname);
     expect(cleanedKhabib.fullname).toEqual(khabib.fullname);
     expect(cleanedKhabib.description).toEqual(khabib.description);

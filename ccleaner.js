@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const cleaner = (rankings) => {
   const holder = [];
   rankings.forEach((rank) => {
@@ -32,7 +34,7 @@ const cleanString = (text) => {
 const parseValueAndPercentageText = (text) => {
   [value, percentage] = text.split(" ");
   return {
-    value: parseInt(value, 10),
+    value: parseInt(value, 10) || 0,
     percentage: percentage.replace(/[()]/g, ""),
   };
 };
@@ -55,7 +57,7 @@ if (!Object.prototype.setPromotedInfo) {
     for (const promo of promotedInfo) {
       cleanedPromo.push({
         label: cleanString(promo.label),
-        value: parseInt(promo.value, 10),
+        value: parseInt(promo.value, 10) || 0,
       });
     }
     return {
@@ -70,21 +72,21 @@ Object.prototype.setStats = function () {
   return {
     ...this,
     stats: {
-      sigStrikesAttempted: parseInt(stats.sigStrikesAttempted, 10),
-      sigStrikesLanded: parseInt(stats.sigStrikesLanded, 10),
-      takedownsAttempted: parseInt(stats.takedownsAttempted, 10),
-      takedownsLanded: parseInt(stats.takedownsLanded, 10),
-      sigStrikesLandedPerMin: Number(cleanString(stats.sigStrikesLandedPerMin)),
-      sigStrikesAbsorbedPerMin: Number(
-        cleanString(stats.sigStrikesAbsorbedPerMin)
-      ),
-      takedownAvgPerFifteen: Number(cleanString(stats.takedownAvgPerFifteen)),
-      submissionAvgPerFifteen: Number(
-        cleanString(stats.submissionAvgPerFifteen)
-      ),
+      sigStrikesAttempted: parseInt(stats.sigStrikesAttempted, 10) || 0,
+      sigStrikesLanded: parseInt(stats.sigStrikesLanded, 10) || 0,
+      takedownsAttempted: parseInt(stats.takedownsAttempted, 10) || 0,
+      takedownsLanded: parseInt(stats.takedownsLanded, 10) || 0,
+      sigStrikesLandedPerMin:
+        Number(cleanString(stats.sigStrikesLandedPerMin)) || 0,
+      sigStrikesAbsorbedPerMin:
+        Number(cleanString(stats.sigStrikesAbsorbedPerMin)) || 0,
+      takedownAvgPerFifteen:
+        Number(cleanString(stats.takedownAvgPerFifteen)) || 0,
+      submissionAvgPerFifteen:
+        Number(cleanString(stats.submissionAvgPerFifteen)) || 0,
       sigStrikeDefence: cleanString(stats.sigStrikeDefence).replace(/\s/, ""),
       takedownDefence: cleanString(stats.takedownDefence).replace(/\s/, ""),
-      knockdownRatio: Number(cleanString(stats.knockdownRatio)),
+      knockdownRatio: Number(cleanString(stats.knockdownRatio)) || 0,
       avgFightTime: cleanString(stats.avgFightTime),
       sigStrikesByPosition: {
         standing: parseValueAndPercentageText(
@@ -95,15 +97,15 @@ Object.prototype.setStats = function () {
       },
       sigStrikeByTarget: {
         head: {
-          value: parseInt(stats.sigStrikeByTarget.head.value, 10),
+          value: parseInt(stats.sigStrikeByTarget.head.value, 10) || 0,
           percentage: stats.sigStrikeByTarget.head.percentage,
         },
         body: {
-          value: parseInt(stats.sigStrikeByTarget.body.value, 10),
+          value: parseInt(stats.sigStrikeByTarget.body.value, 10) || 0,
           percentage: stats.sigStrikeByTarget.body.percentage,
         },
         leg: {
-          value: parseInt(stats.sigStrikeByTarget.leg.value, 10),
+          value: parseInt(stats.sigStrikeByTarget.leg.value, 10) || 0,
           percentage: stats.sigStrikeByTarget.leg.percentage,
         },
       },

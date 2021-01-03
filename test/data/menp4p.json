@@ -24,9 +24,9 @@
         "knockdownRatio": 0.2,
         "avgFightTime": "13:56",
         "sigStrikesByPosition": {
-          "standing": "263 (40%)",
-          "clinch": "26 (4%) ",
-          "ground": "368 (56%)"
+          "standing": { "value": 263, "percentage": "40%" },
+          "clinch": { "value": 26, "percentage": "4%" },
+          "ground": { "value": 368, "percentage": "56%" }
         },
         "sigStrikeByTarget": {
           "head": { "value": 570, "percentage": "87%" },
@@ -34,9 +34,9 @@
           "leg": { "value": 32, "percentage": "5%" }
         },
         "winByWay": {
-          "koTko": "8 (29%)",
-          "dec": "10 (36%) ",
-          "sub": "10 (36%)"
+          "koTko": { "value": 8, "percentage": "29%" },
+          "dec": { "value": 10, "percentage": "36%" },
+          "sub": { "value": 10, "percentage": "36%" }
         }
       }
     }

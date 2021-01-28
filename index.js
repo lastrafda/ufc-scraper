@@ -75,6 +75,13 @@ const fs = require("fs");
           ".c-hero__headline-suffix",
           (div) => div.textContent
         );
+        let heroImg = await fighterPage.$eval(".c-hero__image", (img) =>
+          img.getAttribute("src")
+        );
+
+        let bioImg = await fighterPage.$eval(".c-bio__image>img", (img) =>
+          img.getAttribute("src")
+        );
 
         /**
          * Get the promo record of every fighter
@@ -195,6 +202,8 @@ const fs = require("fs");
           nickname,
           fullname,
           description,
+          heroImg,
+          bioImg,
           promoted: [
             {
               label: firstPromotedText,
@@ -260,12 +269,7 @@ const fs = require("fs");
       columnIndex++;
     }
     await browser.close();
-    fs.rmSync("./output.json", (err) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-    });
+
     fs.writeFile("output.json", JSON.stringify(output), "utf8", (err) => {
       if (err) {
         throw err;
